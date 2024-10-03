@@ -1,2 +1,0 @@
-# RishBroProMax.github.io
-(●'◡'●)
