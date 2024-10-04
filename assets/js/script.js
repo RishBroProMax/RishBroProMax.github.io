@@ -95,7 +95,7 @@ navigationLinks.forEach((navLink) => {
     });
 });
 
-
+// NEWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
 // Disable right-click and key combinations
 document.addEventListener('contextmenu', function (e) {
     e.preventDefault();
@@ -117,4 +117,42 @@ formInputs.forEach((input) => {
         await new Promise(resolve => setTimeout(resolve, 10));
         formBtn.disabled = !form.checkValidity();
     });
+});
+
+// Disable right-click and inspect element
+    document.addEventListener('contextmenu', event => event.preventDefault());
+    document.addEventListener('keydown', function (event) {
+        if (event.key === "F12" || (event.ctrlKey && event.shiftKey && event.key === "I")) {
+            event.preventDefault();
+        }
+    });
+
+    // Footer security with tamper detection
+    const correctFooterText = "Rishmika Sandanu";
+    const correctFooterLink = "https://github.com/RishBroProMax";
+
+    function checkFooterIntegrity() {
+        const footerLinkElement = document.querySelector('#footer .footer-content a');
+        const footerText = footerLinkElement ? footerLinkElement.textContent.trim() : "";
+        const footerLink = footerLinkElement ? footerLinkElement.getAttribute('href') : "";
+
+        if (footerText !== correctFooterText || footerLink !== correctFooterLink) {
+            alert("Unauthorized modification detected! Access denied.");
+            document.body.innerHTML = '<h1>⚠ Access Denied ⚠</h1><p>The footer has been altered. Access is restricted.</p>';
+        }
+    }
+
+    const footer = document.querySelector('#footer');
+    const observer = new MutationObserver(() => {
+        checkFooterIntegrity();
+    });
+
+    observer.observe(footer, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        characterData: true
+    });
+
+    checkFooterIntegrity();
 });
