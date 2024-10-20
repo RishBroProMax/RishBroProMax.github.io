@@ -11,8 +11,9 @@
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+            background-color: rgb(24, 1, 1); /* Added additional color */
             overflow-x: hidden;
+            user-select: none; /* Prevent selection of text for screenshot protection */
         }
 
         .container {
@@ -27,6 +28,13 @@
             color: #fff;
             margin-bottom: 20px;
             animation: fadeIn 1s ease-in-out;
+        }
+
+        #password-section {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block; /* Center the box */
         }
 
         #password-section p {
@@ -44,19 +52,32 @@
             color: #fff;
         }
 
-        #submit-btn {
+        #submit-btn, #logout-btn {
             padding: 10px 20px;
             font-size: 1rem;
-            background-color: #74ebd5;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             color: #fff;
             transition: background-color 0.3s ease;
+            margin-top: 10px; /* Space between buttons */
+        }
+
+        #submit-btn {
+            background-color: #74ebd5;
         }
 
         #submit-btn:hover {
             background-color: #ACB6E5;
+        }
+
+        #logout-btn {
+            background-color: #ff6666;
+            display: none; /* Hide logout button initially */
+        }
+
+        #logout-btn:hover {
+            background-color: #ff4444;
         }
 
         #error-message {
@@ -176,6 +197,7 @@
             <p>🗂 Enter the password to view the gallery:</p>
             <input type="password" id="password" placeholder="Enter password 🔒">
             <button id="submit-btn">Submit</button>
+            <button id="logout-btn" onclick="logout()">Logout</button>
             <p id="error-message"></p>
         </div>
 
@@ -186,7 +208,7 @@
                 <img src="image3.jpg" alt="Image 3" loading="lazy">
                 <img src="image4.jpg" alt="Image 4" loading="lazy">
                 <img src="image5.jpg" alt="Image 5" loading="lazy">
-                 <img src="image6.jpg" alt="Image 6">
+                <img src="image6.jpg" alt="Image 6">
                 <img src="image7.jpg" alt="Image 7">
                 <img src="image8.jpg" alt="Image 8">
                 <img src="image9.jpg" alt="Image 9">
@@ -230,27 +252,41 @@
             const passwordInput = document.getElementById('password').value;
             const errorMessage = document.getElementById('error-message');
             const gallery = document.getElementById('gallery');
+            const logoutBtn = document.getElementById('logout-btn');
             const correctPassword = 'lol1234';  // Set your password here
 
             if (passwordInput === correctPassword) {
                 gallery.classList.remove('hidden');
                 document.getElementById('password-section').style.display = 'none';
-                errorMessage.textContent = 'Server Error';
+                logoutBtn.style.display = 'inline-block'; // Show logout button
+                errorMessage.textContent = ''; // Clear error message
             } else {
-                errorMessage.textContent = 'Incorrect password. Please try again! 🔒';
+                errorMessage.textContent = 'Incorrect password. Please try again.';
             }
         }
 
-        // Modal functionality to enlarge images
+        function logout() {
+            const gallery = document.getElementById('gallery');
+            const passwordSection = document.getElementById('password-section');
+            const logoutBtn = document.getElementById('logout-btn');
+            const errorMessage = document.getElementById('error-message');
+
+            gallery.classList.add('hidden');
+            passwordSection.style.display = 'block';
+            logoutBtn.style.display = 'none'; // Hide logout button
+            document.getElementById('password').value = ''; // Clear password input
+            errorMessage.textContent = ''; // Clear error message
+        }
+
         const images = document.querySelectorAll('.image-container img');
         const modal = document.getElementById('modal');
         const modalImg = document.getElementById('modal-img');
         const closeBtn = document.querySelector('.close-btn');
 
-        images.forEach(image => {
-            image.addEventListener('click', () => {
+        images.forEach((img) => {
+            img.addEventListener('click', () => {
                 modal.style.display = 'flex';
-                modalImg.src = image.src;
+                modalImg.src = img.src;
             });
         });
 
@@ -258,30 +294,11 @@
             modal.style.display = 'none';
         });
 
-        modal.addEventListener('click', (e) => {
-            if (e.target !== modalImg) {
+        // Close the modal when clicking outside of the image
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
                 modal.style.display = 'none';
             }
-        });
-
-        // Disable right-click, F12, Ctrl+Shift+I to prevent Inspect Element and View Source
-        document.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-            alert(" 🔒 Right-click is disabled on this page to protect content.");
-        });
-
-        document.onkeydown = function(e) {
-            if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 67))) {
-                e.preventDefault();
-                alert("⚔ Inspect and View Source are disabled to protect this content.");
-                return false;
-            }
-        };
-
-        // Prevent image dragging and downloading
-        document.querySelectorAll('img').forEach(img => {
-            img.addEventListener('contextmenu', (e) => e.preventDefault()); // Prevent right-click on images
-            img.addEventListener('dragstart', (e) => e.preventDefault()); // Disable drag
         });
     </script>
 </body>
