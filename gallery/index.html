@@ -9,11 +9,11 @@
 </head>
 <body>
     <div class="container">
-        <h1>Image Gallery</h1>
+        <h1 class="title">Image Gallery</h1>
         <div id="password-section">
-            <p>Enter the password to view the gallery:</p>
-            <input type="password" id="password" placeholder="Enter password">
-            <button onclick="checkPassword()">Submit</button>
+            <p>🗂 Enter the password to view the gallery:</p>
+            <input type="password" id="password" placeholder="Enter password 🔒">
+            <button id="submit-btn">Submit</button>
             <p id="error-message"></p>
         </div>
 
@@ -23,21 +23,62 @@
                 <img src="image2.jpg" alt="Image 2">
                 <img src="image3.jpg" alt="Image 3">
                 <img src="image4.jpg" alt="Image 4">
-                <img src="image5.jpg" alt="Image 4">
-                <img src="image6.jpg" alt="Image 4">
-                <img src="image7.jpg" alt="Image 4">
-                <img src="image8.jpg" alt="Image 4">
-                <img src="image9.jpg" alt="Image 4">
-                <img src="image10.jpg" alt="Image 4">
-                <img src="image11.jpg" alt="Image 4">
-                <img src="image12.jpg" alt="Image 4">
-                <img src="image13.jpg" alt="Image 4">
-                <img src="image14.jpg" alt="Image 4">
-                <img src="image15.jpg" alt="Image 4">
+                <img src="image5.jpg" alt="Image 5">
+                <img src="image6.jpg" alt="Image 6">
+                <img src="image7.jpg" alt="Image 7">
+                <img src="image8.jpg" alt="Image 8">
+                <img src="image9.jpg" alt="Image 9">
+                <img src="image10.jpg" alt="Image 10">
+                <img src="image11.jpg" alt="Image 11">
+                <img src="image12.jpg" alt="Image 12">
+                <img src="image13.jpg" alt="Image 13">
+                <img src="image14.jpg" alt="Image 14">
+                <img src="image15.jpg" alt="Image 15">
+                <img src="image16.jpg" alt="Image 16">
+                <img src="image17.jpg" alt="Image 17">
+                <img src="image18.jpg" alt="Image 18">
+                <img src="image19.jpg" alt="Image 19">
+                <img src="image20.jpg" alt="Image 20">
+                <img src="image21.jpg" alt="Image 21">
+                <img src="image22.jpg" alt="Image 22">
+                <img src="image23.jpg" alt="Image 23">
+                <img src="image24.jpg" alt="Image 24">
+                <img src="image25.jpg" alt="Image 25">
             </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        document.getElementById('submit-btn').addEventListener('click', checkPassword);
+
+        function checkPassword() {
+            const passwordInput = document.getElementById('password').value;
+            const errorMessage = document.getElementById('error-message');
+            const gallery = document.getElementById('gallery');
+            const correctPassword = 'lol1234';  // Set your password here
+
+            if (passwordInput === correctPassword) {
+                gallery.classList.remove('hidden');
+                document.getElementById('password-section').style.display = 'none';
+                errorMessage.textContent = '';
+            } else {
+                errorMessage.textContent = 'Incorrect password. Please try again! 🔒';
+            }
+        }
+
+        // Disable right-click, F12, Ctrl+Shift+I to prevent Inspect Element and View Source
+        document.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            alert("Right-click is disabled on this page to protect content.");
+        });
+
+        document.onkeydown = function(e) {
+            if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 67))) {
+                e.preventDefault();
+                alert("Inspect and View Source are disabled to protect this content.");
+                return false;
+            }
+        };
+    </script>
 </body>
 </html>
