@@ -13,18 +13,11 @@
             padding: 0;
             background-color: #181818; /* Dark background for contrast */
             overflow-x: hidden;
-            user-select: none;
+            user-select: none; /* Disable text selection */
+            cursor: default; /* Change cursor to default */
         }
 
         /* Disable right-click and inspect view */
-        body, html {
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
         document.addEventListener('contextmenu', function(e) {
             e.preventDefault();
         });
@@ -34,6 +27,10 @@
             margin: 0 auto;
             padding: 20px;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100vh; /* Center vertically */
         }
 
         .title {
@@ -47,13 +44,15 @@
         }
 
         #password-section {
-            background: rgba(116, 235, 213, 0.1);
-            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+            background: rgba(116, 235, 213, 0.2); /* Slightly more opaque */
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.4);
             padding: 40px;
             border-radius: 20px;
             display: inline-block;
             transition: transform 0.3s ease;
             animation: slideIn 1s ease-out;
+            max-width: 400px; /* Fixed width for the section */
+            width: 100%;
         }
 
         #password-section:hover {
@@ -73,7 +72,8 @@
             margin-right: 10px;
             background-color: rgba(255, 255, 255, 0.2);
             color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            width: calc(100% - 130px); /* Adjust width to fit */
         }
 
         #submit-btn, #logout-btn {
@@ -240,9 +240,7 @@
 
         <div id="gallery" class="hidden">
             <div class="image-container">
- <img src="image1.jpg" alt="Image 1" loading="lazy">
-                <img src="image2.jpg" alt="Image 2" loading="lazy">
-                <img src="image1.jpg" alt="Image 1" loading="lazy">
+          <img src="image1.jpg" alt="Image 1" loading="lazy">
                 <img src="image2.jpg" alt="Image 2" loading="lazy">
                 <img src="image3.jpg" alt="Image 3" loading="lazy">
                 <img src="image4.jpg" alt="Image 4" loading="lazy">
@@ -276,68 +274,56 @@
                 <img src="image32.jpg" alt="Image 32">
                 <img src="image33.jpg" alt="Image 33">
                 <img src="image34.jpg" alt="Image 34">
-                <!-- Add more images as needed -->
             </div>
         </div>
-    </div>
 
-    <!-- Modal to view images -->
-    <div id="modal" class="modal">
-        <span class="close-btn">&times;</span>
-        <div class="modal-content">
-            <img id="modal-img" src="" alt="Expanded Image">
+        <div id="modal" class="modal">
+            <span class="close-btn" onclick="closeModal()">✖️</span>
+            <img id="modal-image" class="modal-content" src="" alt="Large Image">
         </div>
-    </div>
 
-    <footer>
-        <p>Copyright &copy; 2024 <a href="https://github.com/RishBroProMax">RishBroProMax</a> - All Rights Reserved</p>
-    </footer>
+        <footer>
+            <p>Created by Your Name | <a href="https://yourwebsite.com">Visit my website</a></p>
+        </footer>
+    </div>
 
     <script>
-        document.getElementById('submit-btn').addEventListener('click', checkPassword);
+        const correctPassword = "yourpassword"; // Replace with your actual password
 
-        function checkPassword() {
-            const passwordInput = document.getElementById('password').value;
-            const errorMessage = document.getElementById('error-message');
-            const gallery = document.getElementById('gallery');
-            const logoutBtn = document.getElementById('logout-btn');
-            const correctPassword = 'lol1234'; // Replace with your desired password
-
-            if (passwordInput === correctPassword) {
-                gallery.classList.remove('hidden');
-                errorMessage.textContent = '';
-                document.getElementById('password-section').style.display = 'none';
-                logoutBtn.style.display = 'inline-block';
+        document.getElementById("submit-btn").onclick = function() {
+            const password = document.getElementById("password").value;
+            const errorMessage = document.getElementById("error-message");
+            if (password === correctPassword) {
+                document.getElementById("password-section").classList.add("hidden");
+                document.getElementById("gallery").classList.remove("hidden");
+                document.getElementById("logout-btn").style.display = "inline-block"; // Show logout button
+                errorMessage.textContent = "";
             } else {
-                errorMessage.textContent = 'Incorrect password! Try again.';
+                errorMessage.textContent = "🚫 Incorrect password, please try again.";
             }
-        }
+        };
 
         function logout() {
-            location.reload();
+            document.getElementById("password").value = "";
+            document.getElementById("password-section").classList.remove("hidden");
+            document.getElementById("gallery").classList.add("hidden");
+            document.getElementById("logout-btn").style.display = "none"; // Hide logout button
         }
 
         const images = document.querySelectorAll('.image-container img');
         const modal = document.getElementById('modal');
-        const modalImg = document.getElementById('modal-img');
-        const closeBtn = document.querySelector('.close-btn');
+        const modalImg = document.getElementById('modal-image');
 
-        images.forEach((img) => {
-            img.addEventListener('click', () => {
-                modal.style.display = 'flex';
-                modalImg.src = img.src;
-            });
-        });
-
-        closeBtn.addEventListener('click', () => {
-            modal.style.display = 'none';
-        });
-
-        window.addEventListener('click', (event) => {
-            if (event.target === modal) {
-                modal.style.display = 'none';
+        images.forEach(img => {
+            img.onclick = function() {
+                modal.style.display = "flex";
+                modalImg.src = this.src;
             }
         });
+
+        function closeModal() {
+            modal.style.display = "none";
+        }
     </script>
 </body>
 </html>
