@@ -16,6 +16,29 @@
             user-select: none;
         }
 
+        /* Disable right-click and inspect view */
+        body, html {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        body::after {
+            content: "Inspect Disabled";
+            display: none;
+        }
+        window.addEventListener('keydown', function(e) {
+            if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && e.keyCode === 73) || (e.ctrlKey && e.keyCode === 85)) {
+                e.preventDefault();
+                return false;
+            }
+        });
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -27,14 +50,26 @@
             font-size: 3rem;
             color: #fff;
             margin-bottom: 20px;
-            animation: fadeIn 1s ease-in-out;
+            animation: fadeIn 1.5s ease-in-out;
+            background: linear-gradient(90deg, #74ebd5, #ACB6E5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
+        /* Enhanced login area */
         #password-section {
-            background-color: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 10px;
+            background: linear-gradient(145deg, rgba(116, 235, 213, 0.1), rgba(172, 182, 229, 0.1));
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            border-radius: 20px;
             display: inline-block;
+            transition: transform 0.3s ease, background-color 0.5s ease;
+            animation: slideIn 1s ease-out;
+        }
+
+        #password-section:hover {
+            background-color: rgba(116, 235, 213, 0.2);
+            transform: scale(1.02);
         }
 
         #password-section p {
@@ -43,24 +78,25 @@
         }
 
         #password {
-            padding: 10px;
+            padding: 15px;
             font-size: 1rem;
-            border: 2px solid #fff;
-            border-radius: 5px;
+            border: none;
+            border-radius: 10px;
             margin-right: 10px;
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.2);
             color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         #submit-btn, #logout-btn {
-            padding: 10px 20px;
+            padding: 12px 25px;
             font-size: 1rem;
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
             cursor: pointer;
             color: #fff;
-            transition: background-color 0.3s ease;
-            margin-top: 10px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            margin-top: 15px;
         }
 
         #submit-btn {
@@ -69,6 +105,7 @@
 
         #submit-btn:hover {
             background-color: #ACB6E5;
+            transform: translateY(-5px);
         }
 
         #logout-btn {
@@ -78,6 +115,7 @@
 
         #logout-btn:hover {
             background-color: #ff4444;
+            transform: translateY(-5px);
         }
 
         #error-message {
@@ -187,6 +225,17 @@
                 opacity: 1;
             }
         }
+
+        @keyframes slideIn {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 <body>
@@ -203,6 +252,8 @@
 
         <div id="gallery" class="hidden">
             <div class="image-container">
+                <img src="image1.jpg" alt="Image 1" loading="lazy">
+                <img src="image2.jpg" alt="Image 2" loading="lazy">
                 <img src="image1.jpg" alt="Image 1" loading="lazy">
                 <img src="image2.jpg" alt="Image 2" loading="lazy">
                 <img src="image3.jpg" alt="Image 3" loading="lazy">
@@ -237,6 +288,7 @@
                 <img src="image32.jpg" alt="Image 32">
                 <img src="image33.jpg" alt="Image 33">
                 <img src="image34.jpg" alt="Image 34">
+                <!-- Add more images as needed -->
             </div>
         </div>
     </div>
@@ -266,44 +318,31 @@
             if (passwordInput === correctPassword) {
                 gallery.classList.remove('hidden');
                 errorMessage.textContent = '';
+                document.getElementById('password-section').style.display = 'none';
                 logoutBtn.style.display = 'inline-block';
-                document.getElementById('password-section').classList.add('hidden');
             } else {
-                errorMessage.textContent = '❌ Incorrect password! Please try again.';
+                errorMessage.textContent = 'Incorrect password! Try again.';
             }
         }
 
         function logout() {
-            const gallery = document.getElementById('gallery');
-            const passwordSection = document.getElementById('password-section');
-            const logoutBtn = document.getElementById('logout-btn');
-
-            gallery.classList.add('hidden');
-            passwordSection.classList.remove('hidden');
-            logoutBtn.style.display = 'none';
+            location.reload();
         }
 
-        // Modal handling for image enlargement
+        const images = document.querySelectorAll('.image-container img');
         const modal = document.getElementById('modal');
         const modalImg = document.getElementById('modal-img');
         const closeBtn = document.querySelector('.close-btn');
-        const images = document.querySelectorAll('.image-container img');
 
-        images.forEach(img => {
-            img.addEventListener('click', () => {
+        images.forEach(image => {
+            image.addEventListener('click', () => {
                 modal.style.display = 'flex';
-                modalImg.src = img.src;
+                modalImg.src = image.src;
             });
         });
 
         closeBtn.addEventListener('click', () => {
             modal.style.display = 'none';
-        });
-
-        window.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.style.display = 'none';
-            }
         });
     </script>
 </body>
