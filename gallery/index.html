@@ -6,10 +6,172 @@
     <title>Image Gallery</title>
     <link rel="icon" type="image/x-icon" href="picture.png">
     <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 3rem;
+            color: #fff;
+            margin-bottom: 20px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        #password-section p {
+            font-size: 1.2rem;
+            color: #fff;
+        }
+
+        #password {
+            padding: 10px;
+            font-size: 1rem;
+            border: 2px solid #fff;
+            border-radius: 5px;
+            margin-right: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        #submit-btn {
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #74ebd5;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: #fff;
+            transition: background-color 0.3s ease;
+        }
+
+        #submit-btn:hover {
+            background-color: #ACB6E5;
+        }
+
+        #error-message {
+            color: #ff6666;
+            margin-top: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .image-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+            opacity: 0;
+            animation: fadeIn 2s forwards;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            filter: brightness(85%);
+            user-select: none; /* Prevent image selection */
+        }
+
+        .image-container img:hover {
+            transform: scale(1.1);
+            filter: brightness(100%);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            animation: zoomIn 0.5s ease;
+        }
+
+        .modal img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            color: #fff;
+            font-size: 40px;
+            cursor: pointer;
+        }
+
+        footer {
+            margin-top: 50px;
+            color: #fff;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        a {
+            color: #74ebd5;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #ACB6E5;
+        }
+
+        /* Keyframes for animations */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes zoomIn {
+            0% {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h1 class="title">Image Gallery</h1>
+
         <div id="password-section">
             <p>🗂 Enter the password to view the gallery:</p>
             <input type="password" id="password" placeholder="Enter password 🔒">
@@ -19,12 +181,12 @@
 
         <div id="gallery" class="hidden">
             <div class="image-container">
-                <img src="image1.jpg" alt="Image 1">
-                <img src="image2.jpg" alt="Image 2">
-                <img src="image3.jpg" alt="Image 3">
-                <img src="image4.jpg" alt="Image 4">
-                <img src="image5.jpg" alt="Image 5">
-                <img src="image6.jpg" alt="Image 6">
+                <img src="image1.jpg" alt="Image 1" loading="lazy">
+                <img src="image2.jpg" alt="Image 2" loading="lazy">
+                <img src="image3.jpg" alt="Image 3" loading="lazy">
+                <img src="image4.jpg" alt="Image 4" loading="lazy">
+                <img src="image5.jpg" alt="Image 5" loading="lazy">
+                 <img src="image6.jpg" alt="Image 6">
                 <img src="image7.jpg" alt="Image 7">
                 <img src="image8.jpg" alt="Image 8">
                 <img src="image9.jpg" alt="Image 9">
@@ -44,9 +206,22 @@
                 <img src="image23.jpg" alt="Image 23">
                 <img src="image24.jpg" alt="Image 24">
                 <img src="image25.jpg" alt="Image 25">
+                <!-- Add more images as needed -->
             </div>
         </div>
     </div>
+
+    <!-- Modal to view images -->
+    <div id="modal" class="modal">
+        <span class="close-btn">&times;</span>
+        <div class="modal-content">
+            <img id="modal-img" src="" alt="Expanded Image">
+        </div>
+    </div>
+
+    <footer>
+        <p>Copyright &copy; 2024 <a href="https://github.com/RishBroProMax">RishBroProMax</a> - All Rights Reserved</p>
+    </footer>
 
     <script>
         document.getElementById('submit-btn').addEventListener('click', checkPassword);
@@ -60,25 +235,54 @@
             if (passwordInput === correctPassword) {
                 gallery.classList.remove('hidden');
                 document.getElementById('password-section').style.display = 'none';
-                errorMessage.textContent = '';
+                errorMessage.textContent = 'Server Error';
             } else {
                 errorMessage.textContent = 'Incorrect password. Please try again! 🔒';
             }
         }
 
+        // Modal functionality to enlarge images
+        const images = document.querySelectorAll('.image-container img');
+        const modal = document.getElementById('modal');
+        const modalImg = document.getElementById('modal-img');
+        const closeBtn = document.querySelector('.close-btn');
+
+        images.forEach(image => {
+            image.addEventListener('click', () => {
+                modal.style.display = 'flex';
+                modalImg.src = image.src;
+            });
+        });
+
+        closeBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target !== modalImg) {
+                modal.style.display = 'none';
+            }
+        });
+
         // Disable right-click, F12, Ctrl+Shift+I to prevent Inspect Element and View Source
         document.addEventListener('contextmenu', (e) => {
             e.preventDefault();
-            alert("Right-click is disabled on this page to protect content.");
+            alert(" 🔒 Right-click is disabled on this page to protect content.");
         });
 
         document.onkeydown = function(e) {
             if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 67))) {
                 e.preventDefault();
-                alert("Inspect and View Source are disabled to protect this content.");
+                alert("⚔ Inspect and View Source are disabled to protect this content.");
                 return false;
             }
         };
+
+        // Prevent image dragging and downloading
+        document.querySelectorAll('img').forEach(img => {
+            img.addEventListener('contextmenu', (e) => e.preventDefault()); // Prevent right-click on images
+            img.addEventListener('dragstart', (e) => e.preventDefault()); // Disable drag
+        });
     </script>
 </body>
 </html>
