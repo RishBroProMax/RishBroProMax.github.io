@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌍IP Finder By Rishmika Sandanu</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 IP Finder 🌍</h1>
+
+        <!-- Verification Section -->
+        <div id="verification-section">
+            <h2>🚨 Verify You're Human</h2>
+            <p>🧩Complete the following to access IP Finder:</p>
+            <button id="verify-btn">I am not a robot 🤖</button>
+        </div>
+
+        <!-- IP Finder Section -->
+        <div id="ip-section" style="display:none;">
+            <h2>Find Any IP Address Info</h2>
+            <input type="text" id="ip-input" placeholder="🌐 Enter IP Address">
+            <button id="search-btn">Search 🔍</button>
+            <button id="my-ip-btn">What is My IP? 📡</button>
+            <div id="result"></div>
+        </div>
+
+        <!-- Pop-up for IP result -->
+        <div id="popup" class="popup hidden">
+            <div class="popup-content">
+                <span class="close-btn">&times;</span>
+                <div id="popup-result"></div>
+                <button id="copy-btn">Copy IP 📋</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
