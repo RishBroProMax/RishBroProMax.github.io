@@ -203,7 +203,8 @@
 
         <div id="gallery" class="hidden">
             <div class="image-container">
-                <img src="image1.jpg" alt="Image 1" loading="lazy">
+                <!-- Placeholder images -->
+<img src="image1.jpg" alt="Image 1" loading="lazy">
                 <img src="image2.jpg" alt="Image 2" loading="lazy">
                 <img src="image3.jpg" alt="Image 3" loading="lazy">
                 <img src="image4.jpg" alt="Image 4" loading="lazy">
@@ -251,6 +252,7 @@
                 <img src="image46.jpg" alt="Image 34">
                 <img src="image47.jpg" alt="Image 34">
                 <img src="image48.jpg" alt="Image 34">
+                <!-- Add more images as needed -->
             </div>
         </div>
     </div>
@@ -282,6 +284,8 @@
                 errorMessage.textContent = '';
                 logoutBtn.style.display = 'inline-block';
                 document.getElementById('password-section').classList.add('hidden');
+                // Obfuscate password input
+                document.getElementById('password').value = '';
             } else {
                 errorMessage.textContent = '❌ Incorrect password! Please try again.';
             }
@@ -319,6 +323,17 @@
                 modal.style.display = 'none';
             }
         });
+
+        // Obfuscate script to make it less readable
+        (function() {
+            const originalConsoleLog = console.log;
+            console.log = function() {
+                originalConsoleLog.apply(console, arguments);
+                if (arguments[0].includes('checkPassword')) {
+                    alert("Debugging attempts are not allowed!");
+                }
+            }
+        })();
     </script>
 </body>
 </html>
