@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Tester Terminal</title>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/545/545680.png" type="image/png">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap');
+
+    /* Universal Styles */
+    body {
+      font-family: 'Fira Code', monospace;
+      background: linear-gradient(135deg, #2b2b2b, #1c1c1c);
+      color: #abb2bf;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    .api-tester {
+      background: #21252b;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.9), 0 0 20px rgba(97, 218, 251, 0.5);
+      width: 90%;
+      max-width: 650px;
+      transform: scale(0.9);
+      animation: fadeIn 1s ease forwards;
+      position: relative;
+      border: 1px solid #61dafb;
+    }
+
+    .window-header {
+      display: flex;
+      gap: 6px;
+      padding-bottom: 15px;
+      align-items: center;
+    }
+
+    .window-btn {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .window-btn:hover {
+      transform: scale(1.2);
+    }
+
+    .window-btn:nth-child(1) { background-color: #e06c75; }
+    .window-btn:nth-child(2) { background-color: #e5c07b; }
+    .window-btn:nth-child(3) { background-color: #98c379; }
+
+    h1 {
+      color: #61dafb;
+      font-size: 22px;
+      margin-bottom: 10px;
+      text-align: center;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: -webkit-linear-gradient(#61dafb, #98c379);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      font-size: 14px;
+      color: #98c379;
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    input[type="text"], select, textarea {
+      width: 100%;
+      padding: 10px;
+      background: #2c313c;
+      border: 1px solid #3b3f45;
+      border-radius: 6px;
+      color: #abb2bf;
+      font-family: 'Fira Code', monospace;
+      font-size: 14px;
+      transition: box-shadow 0.3s ease;
+    }
+
+    input[type="text"]:focus, select:focus, textarea:focus {
+      box-shadow: 0 0 8px rgba(97, 218, 251, 0.7);
+    }
+
+    button {
+      background-color: #61dafb;
+      color: #282c34;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+      margin-top: 10px;
+      transition: background-color 0.3s ease, transform 0.2s;
+    }
+
+    button:hover {
+      background-color: #528bff;
+      transform: scale(1.05);
+      box-shadow: 0 5px 20px rgba(82, 139, 255, 0.5);
+    }
+
+    .loading-screen {
+      display: flex;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(29, 31, 33, 0.9);
+      color: #61dafb;
+      font-size: 16px;
+      font-family: 'Fira Code', monospace;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0;
+      animation: fadeInLoading 0.5s ease forwards;
+    }
+
+    .response {
+      background: #282c34;
+      padding: 15px;
+      border-radius: 6px;
+      margin-top: 15px;
+      max-height: 300px;
+      overflow-y: auto;
+      font-size: 14px;
+      color: #abb2bf;
+      border: 1px solid #61dafb;
+    }
+
+    .status {
+      font-size: 13px;
+      color: #61dafb;
+      margin-top: 10px;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      margin-top: 20px;
+      color: #555;
+      font-size: 12px;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes fadeInLoading {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="loading-screen" id="loading">
+  Loading API Tester Terminal...
+</div>
+
+<div class="api-tester">
+  <div class="window-header">
+    <div class="window-btn"></div>
+    <div class="window-btn"></div>
+    <div class="window-btn"></div>
+  </div>
+
+  <h1>API Tester Terminal</h1>
+  
+  <div class="form-group">
+    <label for="url">API URL:</label>
+    <input type="text" id="url" placeholder="https://api.example.com/data">
+  </div>
+  
+  <div class="form-group">
+    <label for="method">Method:</label>
+    <select id="method">
+      <option value="GET">GET</option>
+      <option value="POST">POST</option>
+      <option value="PUT">PUT</option>
+      <option value="DELETE">DELETE</option>
+    </select>
+  </div>
+  
+  <div class="form-group">
+    <label for="headers">Headers (JSON):</label>
+    <textarea id="headers" placeholder='{"Authorization": "Bearer token"}'></textarea>
+  </div>
+  <div class="form-group">
+    <label for="body">Body (JSON for POST/PUT):</label>
+    <textarea id="body" placeholder='{"key": "value"}'></textarea>
+  </div>
+  
+  <button id="send-request">Send Request</button>
+  
+  <div id="response" class="response"></div>
+  <div class="status">
+    Status: <span id="status-code">-</span> | Time: <span id="response-time">-</span> ms
+  </div>
+  
+  <footer>
+    &copy; 2024 RishBroPromax. All Rights Reserved.
+  </footer>
+</div>
+
+<script>
+// Loading Animation on Page Load
+window.addEventListener("load", () => {
+  const loadingScreen = document.getElementById("loading");
+  setTimeout(() => {
+    loadingScreen.style.display = "none";
+  }, 2000);
+});
+
+// API Request Handler
+document.getElementById("send-request").addEventListener("click", async () => {
+  const url = document.getElementById("url").value;
+  const method = document.getElementById("method").value;
+  const headersInput = document.getElementById("headers").value;
+  const bodyInput = document.getElementById("body").value;
+
+  const responseContainer = document.getElementById("response");
+  const messages = [
+    "Sending Request...",
+    "Connecting to API...",
+    "Getting HTTP...",
+    "Checking...",
+    "Finishing..."
+  ];
+
+  const delay = 1000; // Delay in milliseconds (1 second)
+
+  // Function to display messages with delay
+  const showMessages = (messages) => {
+    messages.forEach((message, index) => {
+      setTimeout(() => {
+        responseContainer.innerHTML = message;
+      }, index * delay);
+    });
+  };
+
+  // Start showing messages
+  showMessages(messages);
+
+  try {
+    const headers = headersInput ? JSON.parse(headersInput) : {};
+    const body = bodyInput ? JSON.parse(bodyInput) : null;
+    const options = { method, headers };
+
+    if (method === "POST" || method === "PUT") {
+      options.body = JSON.stringify(body);
+      headers["Content-Type"] = "application/json";
+    }
+
+    const start = performance.now();
+    const response = await fetch(url, options);
+    const data = await response.json();
+    const end = performance.now();
+
+    // Show the final response after all messages are displayed
+    setTimeout(() => {
+      responseContainer.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+      document.getElementById("status-code").textContent = response.status;
+      document.getElementById("response-time").textContent = Math.round(end - start);
+    }, messages.length * delay); // Adjusting to show response after the last message
+  } catch (error) {
+    // Show error message
+    setTimeout(() => {
+      responseContainer.innerHTML = `<span style="color: #e06c75;">Error: ${error.message}</span>`;
+      document.getElementById("status-code").textContent = "💥";
+      document.getElementById("response-time").textContent = "💥";
+    }, messages.length * delay); // Adjusting to show error after the last message
+  }
+});
+
+</script>
+
+</body>
+</html>
