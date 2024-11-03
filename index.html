@@ -1193,6 +1193,38 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   -->
   <script src="script.js"></script>
 
+  <!--Rghit Clikc Disbles -->
+<script>
+// Disable right-click
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            alert("Right-click is disabled! 🎃");
+        });
+
+        // Disable specific keys (F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U)
+        document.addEventListener('keydown', function(e) {
+            if (e.keyCode == 123) { // F12
+                e.preventDefault();
+                alert("Inspecting is not allowed! 😜❌");
+            }
+            if (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) { // Ctrl+Shift+I or Ctrl+Shift+J
+                e.preventDefault();
+                alert("Inspecting is not allowed!");
+            }
+            if (e.ctrlKey && e.keyCode == 85) { // Ctrl+U
+                e.preventDefault();
+                alert("Viewing the source code is not allowed! 🗂🙂");
+            }
+        });
+
+        // Disable opening Developer Tools by dragging or resizing
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.keyCode == 67) { // Disable Ctrl+C
+                e.preventDefault();
+                alert("Copying is not allowed! ⚔");
+            }
+        }); 
+</script>
   <!--
     - ionicon link
   -->
