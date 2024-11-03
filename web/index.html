@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Speed Tester Terminal</title>
+    <link rel="icon" href="https://example.com/icon.png" type="image/png">
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Fira Code', monospace;
+            user-select: none;
+        }
+
+        body {
+            margin: 0;
+            background: #0d0d0d;
+            color: #9eeaff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            cursor: url('https://example.com/custom-cursor.png'), auto; /* Custom cursor */
+        }
+
+        .terminal-container {
+            width: 90%;
+            max-width: 700px;
+            background: #1c1c1c;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 30px rgba(0, 128, 255, 0.7);
+            position: relative;
+            color: #9eeaff;
+        }
+
+        .terminal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 16px;
+            background: #333;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            background-color: #ff5f56;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        .dot:nth-child(2) {
+            background-color: #ffbd2e;
+        }
+
+        .dot:nth-child(3) {
+            background-color: #27c93f;
+        }
+
+        .header-text {
+            flex: 1;
+            text-align: center;
+            font-size: 1.2rem;
+            color: #9eeaff;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: visibility 0s, opacity 0.3s;
+            z-index: 2;
+        }
+
+        .loading-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .loader {
+            border: 6px solid #333;
+            border-top: 6px solid #00d4ff;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .input-container, .popup {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background: #2a2a2a;
+            color: #00d4ff;
+            position: relative;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            outline: none;
+            background: #1c1c1c;
+            color: #9eeaff;
+            font-size: 1rem;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 5px;
+            border: none;
+            background: #00d4ff;
+            color: #0a0e1a;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-size: 1rem;
+        }
+
+        button:hover {
+            background: #0066ff;
+            color: #ffffff;
+        }
+
+        .popup {
+            display: none;
+            background: #ff3b3b;
+            color: #ffffff;
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px;
+            position: absolute;
+            top: -50px;
+            left: 0;
+            right: 0;
+            z-index: 3;
+            animation: popupFade 0.5s ease-in-out;
+ }
+
+        @keyframes popupFade {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .result, .ping-result, .history-container {
+            margin-top: 20px;
+            padding: 15px;
+            background: #282c34;
+            color: #9eeaff;
+            border-radius: 5px;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .command-line {
+            color: #00d4ff;
+        }
+
+        .cookie-consent {
+            background: #444;
+            color: #ffffff;
+            text-align: center;
+            padding: 15px;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 5px;
+            z-index: 10;
+            display: none;
+            border: 2px solid #00d4ff; /* Adding border to match theme */
+            box-shadow: 0 0 15px rgba(0, 0, 255, 0.5);
+            animation: bounce 0.5s infinite alternate; /* Bounce effect */
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-10px); }
+        }
+
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #ffffff;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal-container">
+        <div class="terminal-header">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            <span class="header-text">💻 Website Speed Tester Terminal</span>
+        </div>
+        <div class="input-container">
+            <input type="text" id="urlInput" placeholder="Enter website URL...">
+        </div>
+        <button id="checkSpeedBtn">Check Speed 🚀</button>
+        
+        <div id="result" class="result" style="display: none;"></div>
+        <div id="pingResult" class="ping-result" style="display: none;"></div>
+        <div class="history-container" id="historyContainer"></div>
+        
+        <div class="popup" id="popupMessage">Please enter a valid URL!</div>
+
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loader"></div>
+        </div>
+    </div>
+
+    <div class="cookie-consent" id="cookieConsent">
+        <img src="https://example.com/cookie-icon.png" alt="Cookie Icon" style="width: 20px; vertical-align: middle;"> <!-- Custom icon -->
+        We use cookies to enhance your experience. <button id="acceptCookiesBtn">Accept</button>
+    </div>
+
+    <footer>
+        &copy; 2024 <a href="https://rishbropromax.github.io" style="color: #00d4ff; text-decoration: none;">RishBroProMax</a>. All rights reserved.
+    </footer>
+
+    <script>
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const urlInput = document.getElementById('urlInput');
+        const resultDiv = document.getElementById('result');
+        const pingResultDiv = document.getElementById('pingResult');
+        const historyContainer = document.getElementById('historyContainer');
+        const popupMessage = document.getElementById('popupMessage');
+        const cookieConsent = document.getElementById('cookieConsent');
+
+        // Show cookie consent if not accepted
+        if (!getCookie("cookiesAccepted")) {
+            cookieConsent.style.display = "block";
+        }
+
+        document.getElementById('checkSpeedBtn').addEventListener('click', () => {
+            const url = urlInput.value.trim();
+            if (!url) {
+                showPopup("Please enter a valid URL!");
+                return;
+            }
+            displayLoading(true);
+            setTimeout(() => {
+                checkWebsiteSpeed(url);
+            }, 500);
+        });
+
+        function checkWebsiteSpeed(url) {
+            const randomSpeed = Math.floor(Math.random() * 500) + 100; // Simulated speed in ms
+            const randomHealth = Math.random() < 0.8; // 80% chance for "Good"
+
+            // Add result to history
+            addToHistory(url, randomSpeed);
+
+            const healthStatus = randomHealth ? 'Good' : 'Bad';
+            resultDiv.innerHTML = `Speed: <strong>${randomSpeed} ms</strong> - Status: <strong>${healthStatus}</strong>`;
+            resultDiv.style.display = 'block';
+
+            pingResultDiv.innerHTML = `Ping: <strong>${Math.floor(Math.random() * 100) +  1} ms</strong>`;
+            pingResultDiv.style.display = 'block';
+
+            displayLoading(false);
+        }
+
+        function addToHistory(url, speed) {
+            const historyItem = document.createElement('div');
+            historyItem.className = 'history-item';
+            historyItem.innerHTML = `Checked <strong>${url}</strong> - Speed: <strong>${speed} ms</strong>`;
+            historyContainer.appendChild(historyItem);
+        }
+
+        function showPopup(message) {
+            popupMessage.innerHTML = message;
+            popupMessage.style.display = 'block';
+            setTimeout(() => {
+                popupMessage.style.display = 'none';
+            }, 3000);
+        }
+
+        function displayLoading(isLoading) {
+            loadingOverlay.classList.toggle('active', isLoading);
+        }
+
+        function setCookie(cname, cvalue, exdays) {
+            const d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            const expires = `expires=${d.toUTCString()};`;
+            document.cookie = `${cname}=${cvalue}; ${expires}; path=/`;
+        }
+
+        function getCookie(cname) {
+            const name = cname + "=";
+            const decodedCookie = decodeURIComponent(document.cookie);
+            const ca = decodedCookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        document.getElementById('acceptCookiesBtn').addEventListener('click', () => {
+            setCookie("cookiesAccepted", "true", 30);
+            cookieConsent.style.display = "none";
+        });
+    </script>
+</body>
+</html>
