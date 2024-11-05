@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Super Chat App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="chat-app">
+    <!-- Title Bar -->
+    <div id="title-bar">
+      <div class="window-controls">
+        <div class="window-button red"></div>
+        <div class="window-button yellow"></div>
+        <div class="window-button green"></div>
+      </div>
+      <div class="title">Super Chat Terminal</div>
+    </div>
+
+    <!-- Messages Area -->
+    <div id="messages" class="fade-in"></div>
+    <div id="typing-indicator">Someone is typing...</div>
+
+    <!-- Input Area -->
+    <div id="input-area">
+      <input type="text" id="username" placeholder="Enter your name" />
+      <input type="file" id="profile-pic" />
+      <input type="text" id="message-input" placeholder="Type a message" />
+      <button id="send-btn">Send</button>
+    </div>
+  </div>
+
+  <!-- Admin Button -->
+  <button id="admin-btn">A</button>
+
+  <!-- Network Status -->
+  <div id="network-status">
+    <span>Connected</span>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
