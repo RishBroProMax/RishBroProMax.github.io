@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Gallery V1.03</title>
     <link rel="icon" type="image/x-icon" href="picture.png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <link rel="stylesheet" href="styles.css">
     <style>
         body {
@@ -303,120 +304,195 @@
     </footer>
 
     <script>
-        document.getElementById('submit-btn').addEventListener('click', checkPassword);
+      document.getElementById('submit-btn').addEventListener('click', checkPassword);
 
-        function checkPassword() {
-            const passwordInput = document.getElementById('password').value;
-            const errorMessage = document.getElementById('error-message');
-            const gallery = document.getElementById('gallery');
-            const logoutBtn = document.getElementById('logout-btn');
-            const correctPassword = 'helloworld'; // Replace with your desired password
+let siteLocked = false; // Tracks if the site is locked
+let tamperAttempts = 0; // Tracks the number of tampering attempts
+let warnings = {}; // Tracks IP-based warnings
+let blockedIPs = {}; // Tracks blocked IPs
+let blockedDuration = 2 * 24 * 60 * 60 * 1000; // 2 days in milliseconds
+let suspiciousBehaviorDetected = false; // Tracks suspicious behavior state
+let ipAccessAttempts = {}; // Rate-limiting IP access attempts
 
-            if (passwordInput === correctPassword) {
-                gallery.classList.remove('hidden');
-                errorMessage.textContent = '';
-                logoutBtn.style.display = 'inline-block';
-                document.getElementById('password-section').classList.add('hidden');
-                // Obfuscate password input
-                document.getElementById('password').value = '';
-            } else {
-                errorMessage.textContent = '❌ Incorrect password! Please try again.';
-            }
+const correctPassword = 'helloworld'; // Replace with your desired password
+const maxTamperAttempts = 5; // Max tampering attempts before blocking IP
+
+// Enhanced feedback and unlocking mechanism
+function checkPassword() {
+    const passwordInput = document.getElementById('password').value;
+    const errorMessage = document.getElementById('error-message');
+    const logoutBtn = document.getElementById('logout-btn');
+    const gallery = document.getElementById('gallery');
+
+    if (passwordInput === correctPassword && siteLocked) {
+        siteLocked = false;
+        displaySite(true);
+        errorMessage.textContent = '✅ Welcome back! Site unlocked!';
+        logoutBtn.style.display = 'inline-block';
+        document.getElementById('password-section').classList.add('hidden');
+        document.getElementById('password').value = '';
+    } else if (passwordInput === correctPassword) {
+        displaySite(true);
+        errorMessage.textContent = '✅ Welcome! Site unlocked!';
+        logoutBtn.style.display = 'inline-block';
+        document.getElementById('password-section').classList.add('hidden');
+        document.getElementById('password').value = '';
+    } else {
+        errorMessage.textContent = '❌ Incorrect password! Please try again.';
+    }
+}
+
+// Function to toggle visibility of site content
+function displaySite(show) {
+    const gallery = document.getElementById('gallery');
+    const passwordSection = document.getElementById('password-section');
+    if (show) {
+        gallery.classList.remove('hidden');
+        passwordSection.classList.add('hidden');
+    } else {
+        gallery.classList.add('hidden');
+        passwordSection.classList.remove('hidden');
+    }
+}
+
+// Function to log tampering attempts for further analysis
+function logTamperingAttempt() {
+    console.log('Tampering detected. Logging attempt...');
+}
+
+// Function to block access to developer tools
+function preventDevTools() {
+    if (window.outerWidth - window.innerWidth > 100 || window.outerHeight - window.innerHeight > 100) {
+        detectTampering();
+    }
+}
+
+// Event listeners for security measures
+document.addEventListener('keydown', function (e) {
+    if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || (e.ctrlKey && e.keyCode === 85)) {
+        e.preventDefault();
+        detectTampering();
+    }
+});
+
+document.addEventListener('contextmenu', function (e) {
+    e.preventDefault();
+    detectTampering();
+});
+
+document.addEventListener('copy', function (e) {
+    e.preventDefault();
+    alert('🚫 Copying content is not allowed!');
+});
+
+// Detect suspicious behavior like repeated keypresses
+document.addEventListener('keydown', function (e) {
+    if (e.keyCode === 8 && !suspiciousBehaviorDetected) { // Detect backspace usage
+        suspiciousBehaviorDetected = true;
+        alert('⚠️ Suspicious behavior detected! Your action has been logged.');
+        logSuspiciousBehavior();
+    }
+});
+
+// Log suspicious behavior
+function logSuspiciousBehavior() {
+    console.log('Suspicious behavior detected. Logging...');
+}
+
+// Simulate getting the user's IP address (replace with actual IP retrieval logic)
+function getUserIP() {
+    return "user-ip"; // Replace with actual user IP logic (e.g., through backend API)
+}
+
+// IP Blocking System: Rate-limit and block users based on suspicious activity
+function checkIPAccess(ip) {
+    const currentTime = new Date().getTime();
+    const timeLimit = 60 * 1000; // 1 minute rate limit for IP access
+
+    if (blockedIPs[ip] && currentTime - blockedIPs[ip].timestamp < blockedDuration) {
+        alert("🚨 Your IP is blocked due to multiple suspicious activities.");
+        window.location.reload(); // Block access
+        return;
+    }
+
+    if (!ipAccessAttempts[ip]) ipAccessAttempts[ip] = [];
+
+    ipAccessAttempts[ip].push(currentTime);
+    ipAccessAttempts[ip] = ipAccessAttempts[ip].filter(time => currentTime - time <= timeLimit); // Keep attempts within 1 minute
+
+    if (ipAccessAttempts[ip].length > 5) { // More than 5 attempts within 1 minute
+        alert("🚨 You are rate-limited due to too many access attempts. Please try again later.");
+        blockIP(ip);
+    }
+}
+
+// Block IP due to suspicious activity
+function blockIP(ip) {
+    const currentTime = new Date().getTime();
+    blockedIPs[ip] = { timestamp: currentTime };
+    console.log(`IP ${ip} has been blocked due to suspicious behavior.`);
+    alert("🚨 You have been blocked from accessing this site.");
+    window.location.reload();
+}
+
+// Reset blocked IPs and warning after 2 days
+setInterval(function () {
+    const currentTime = new Date().getTime();
+    for (let ip in blockedIPs) {
+        if (currentTime - blockedIPs[ip].timestamp > blockedDuration) {
+            delete blockedIPs[ip];
+            console.log(`IP ${ip} unblocked after 2 days.`);
         }
+    }
+}, 1000 * 60 * 60 * 24); // Check every 24 hours
 
-        function logout() {
-            const gallery = document.getElementById('gallery');
-            const passwordSection = document.getElementById('password-section');
-            const logoutBtn = document.getElementById('logout-btn');
-
-            gallery.classList.add('hidden');
-            passwordSection.classList.remove('hidden');
-            logoutBtn.style.display = 'none';
+// Prevent inspecting source code and debug attempts
+(function () {
+    const originalConsoleLog = console.log;
+    console.log = function () {
+        originalConsoleLog.apply(console, arguments);
+        if (arguments[0].includes('checkPassword')) {
+            alert("Debugging attempts are not allowed!");
         }
+    };
+})();
 
-        // Modal handling for image enlargement
-        const modal = document.getElementById('modal');
-        const modalImg = document.getElementById('modal-img');
-        const closeBtn = document.querySelector('.close-btn');
-        const images = document.querySelectorAll('.image-container img');
-        const videos = document.querySelectorAll('.image-container video');
+// Lock site on page reload if unauthorized attempt was made
+window.addEventListener('beforeunload', function (e) {
+    if (siteLocked) {
+        e.returnValue = '🚨 The site is locked due to suspicious activity! Are you sure you want to leave?';
+    }
+});
 
-        // Handle image click to open in modal
-        images.forEach(img => {
-            img.addEventListener('click', () => {
-                modal.style.display = 'flex';
-                modalImg.src = img.src;
-                modalImg.classList.remove('hidden');
-                modalVideo.classList.add('hidden');
-            });
-        });
+// Extra Layer: Prevent opening Developer Tools via window resizing and other indicators
+setInterval(function () {
+    preventDevTools(); // Check dimensions every second
+}, 1000);
 
-        // Handle video click to open in modal
-        videos.forEach(video => {
-            video.addEventListener('click', () => {
-                modal.style.display = 'flex';
-                modalVideo.src = video.src;
-                modalVideo.classList.remove('hidden');
-                modalImg.classList.add('hidden');
-            });
-        });
+// IP-based warning and blocking system for multiple failed attempts
+function trackIPWarnings(ip) {
+    const currentTime = new Date().getTime();
 
-        // Close modal on button click
-        closeBtn.addEventListener('click', () => {
-            modal.style.display = 'none';
-            modalImg.src = '';
-            modalVideo.src = '';
-        });
+    if (blockedIPs[ip]) return; // Don't warn or block if already blocked
 
-        // Close modal when clicking outside of content
-        window.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.style.display = 'none';
-                modalImg.src = '';
-                modalVideo.src = '';
-            }
-        });
+    if (!warnings[ip]) warnings[ip] = 0;
+    warnings[ip]++;
 
-        // Obfuscate script to make it less readable
-        (function() {
-            const originalConsoleLog = console.log;
-            console.log = function() {
-                originalConsoleLog.apply(console, arguments);
-                if (arguments[0].includes('checkPassword')) {
-                    alert("Debugging attempts are not allowed!");
-                }
-            }
-        })();
+    if (warnings[ip] == 1) {
+        alert("⚠️ Warning 1: Please refrain from suspicious behavior.");
+    } else if (warnings[ip] == 2) {
+        alert("⚠️ Warning 2: Last warning before blocking your IP.");
+    } else if (warnings[ip] >= 3) {
+        blockIP(ip);
+    }
+}
 
-               // Disable right-click
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-            alert("Right-click is disabled!");
-        });
+// Example IP check on page load
+let userIP = getUserIP();
+checkIPAccess(userIP);
+trackIPWarnings(userIP);
 
-        // Disable specific keys (F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U)
-        document.addEventListener('keydown', function(e) {
-            if (e.keyCode == 123) { // F12
-                e.preventDefault();
-                alert("Inspecting is not allowed!");
-            }
-            if (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) { // Ctrl+Shift+I or Ctrl+Shift+J
-                e.preventDefault();
-                alert("Inspecting is not allowed!");
-            }
-            if (e.ctrlKey && e.keyCode == 85) { // Ctrl+U
-                e.preventDefault();
-                alert("Viewing the source code is not allowed!");
-            }
-        });
 
-        // Disable opening Developer Tools by dragging or resizing
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.keyCode == 67) { // Disable Ctrl+C
-                e.preventDefault();
-                alert("Copying is not allowed!");
-            }
-        });
     </script>
 </body>
 </html>
