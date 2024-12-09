@@ -1,1 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>♻ Redirecting...</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #094172, #080808);
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            text-align: center;
+        }
 
+        .container {
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin: 0.2em 0;
+            animation: slideDown 1.2s ease;
+        }
+
+        p {
+            font-size: 1.2em;
+            margin: 0.5em 0 2em;
+            animation: fadeInText 2s ease-in;
+        }
+
+        .progress-bar {
+            position: relative;
+            width: 80%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.3);
+            margin: 0 auto;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: #fff;
+            animation: fillBar 5s linear forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInText {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fillBar {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>♻ Redirecting...</h1>
+        <p>You will be redirected in <span id="timer">5</span> seconds.</p>
+        <div class="progress-bar">
+            <div class="progress-bar-fill"></div>
+        </div>
+    </div>
+
+    <script>
+        const destinationUrl = "https://melo.pylex.xyz:9164"; // Change this to your destination URL
+        let timer = 5;
+
+        const countdown = setInterval(() => {
+            timer -= 1;
+            document.getElementById("timer").textContent = timer;
+
+            if (timer <= 0) {
+                clearInterval(countdown);
+                window.location.href = destinationUrl;
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
