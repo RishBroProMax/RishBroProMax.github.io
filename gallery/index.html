@@ -1,233 +1,90 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Gallery V1.03</title>
-    <link rel="icon" type="image/x-icon" href="picture.png">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: rgb(24, 1, 1);
-            overflow-x: hidden;
-            user-select: none;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .title {
-            font-size: 3rem;
-            color: #fff;
-            margin-bottom: 20px;
-            animation: fadeIn 1s ease-in-out;
-        }
-
-        #password-section {
-            background-color: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 10px;
-            display: inline-block;
-        }
-
-        #password-section p {
-            font-size: 1.2rem;
-            color: #fff;
-        }
-
-        #password {
-            padding: 10px;
-            font-size: 1rem;
-            border: 2px solid #fff;
-            border-radius: 5px;
-            margin-right: 10px;
-            background-color: rgba(255, 255, 255, 0.1);
-            color: #fff;
-        }
-
-        #submit-btn, #logout-btn {
-            padding: 10px 20px;
-            font-size: 1rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            color: #fff;
-            transition: background-color 0.3s ease;
-            margin-top: 10px;
-        }
-
-        #submit-btn {
-            background-color: #74ebd5;
-        }
-
-        #submit-btn:hover {
-            background-color: #ACB6E5;
-        }
-
-        #logout-btn {
-            background-color: #ff6666;
-            display: none;
-        }
-
-        #logout-btn:hover {
-            background-color: #ff4444;
-        }
-
-        #error-message {
-            color: #ff6666;
-            margin-top: 10px;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .image-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 10px;
-            margin-top: 20px;
-            opacity: 0;
-            animation: fadeIn 2s forwards;
-        }
-
-        .image-container img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-            filter: brightness(85%);
-            user-select: none;
-        }
-
-        .image-container img:hover {
-            transform: scale(1.1);
-            filter: brightness(100%);
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 10;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            justify-content: center;
-            align-items: center;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .modal-content {
-            max-width: 90%;
-            max-height: 90%;
-            animation: zoomIn 0.5s ease;
-        }
-
-        .modal img {
-            width: 100%;
-            height: auto;
-            max-height: 80vh;
-            border-radius: 10px;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 20px;
-            right: 40px;
-            color: #fff;
-            font-size: 40px;
-            cursor: pointer;
-        }
-
-        footer {
-            margin-top: 50px;
-            color: #fff;
-            font-size: 1rem;
-            text-align: center;
-        }
-
-        a {
-            color: #74ebd5;
-            text-decoration: none;
-        }
-
-        a:hover {
-            color: #ACB6E5;
-        }
-
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes zoomIn {
-            0% {
-                transform: scale(0.9);
-                opacity: 0;
-            }
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-                .image-container video {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-            filter: brightness(85%);
-            user-select: none;
-        }
-
-        .image-container video:hover {
-            transform: scale(1.1);
-            filter: brightness(100%);
-        }
-
-        .modal video {
-            width: 100%;
-            max-height: 80vh;
-            border-radius: 10px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title> Suck You </title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+      color: #f0f0f0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+    }
+    .gallery img,
+    .gallery video {
+      @apply w-full h-40 object-cover rounded-lg transition-transform duration-300 shadow-lg;
+    }
+    .gallery img:hover,
+    .gallery video:hover {
+      @apply scale-105 brightness-110 shadow-2xl;
+    }
+    .modal {
+      display: none;
+    }
+    .modal.active {
+      display: flex;
+    }
+  </style>
 </head>
-<body>
-    <div class="container">
-        <h1 class="title">Image Gallery V 1.03</h1>
+<body class="flex flex-col items-center justify-center min-h-screen px-4">
 
-        <div id="password-section">
-            <p>🗂 Enter the password to view the gallery:</p>
-            <input type="password" id="password" placeholder="Enter password 🔒">
-            <button id="submit-btn">Submit</button>
-            <button id="logout-btn" onclick="logout()">Logout</button>
-            <p id="error-message"></p>
-        </div>
+  <!-- Friendly name ask -->
+  <div id="name-prompt" class="text-center max-w-md w-full">
+    <h1 class="text-3xl sm:text-4xl font-extrabold mb-6 select-none">Hey! What's your name? <span class="animate-pulse">👋</span></h1>
+    <input
+      type="text"
+      id="username"
+      placeholder="Type your name..."
+      class="w-full rounded-xl px-5 py-3 text-gray-900 text-lg focus:outline-none focus:ring-4 focus:ring-cyan-400 transition"
+      autocomplete="off"
+      spellcheck="false"
+      autocapitalize="none"
+      autocorrect="off"
+    />
+    <button
+      onclick="checkAccess()"
+      class="mt-6 w-full bg-cyan-500 hover:bg-cyan-600 active:bg-cyan-700 rounded-xl py-3 text-white font-semibold text-lg shadow-md transition"
+      aria-label="Submit your name"
+    >
+      Continue
+    </button>
+  </div>
 
-        <div id="gallery" class="hidden">
-            <div class="image-container">
-                <!-- Placeholder images -->
-<img src="image1.jpg" alt="Image 1" loading="lazy">
+  <!-- Blocked rude message -->
+  <div
+    id="blocked-page"
+    class="hidden text-center max-w-md w-full select-none"
+    role="alert"
+    aria-live="assertive"
+  >
+    <h1
+      id="blocked-text"
+      class="text-5xl sm:text-6xl font-extrabold text-red-600 mb-4"
+    ></h1>
+    <p class="text-lg text-gray-300">You don’t belong here. Get lost.</p>
+  </div>
+
+  <!-- Private Gallery -->
+  <div
+    id="gallery-section"
+    class="hidden max-w-6xl w-full p-4 sm:p-6"
+  >
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-3xl font-extrabold select-none">Private Media</h2>
+      <button
+        onclick="logout()"
+        class="bg-red-600 hover:bg-red-700 active:bg-red-800 px-5 py-2 rounded-xl text-white font-semibold shadow-md transition"
+        aria-label="Logout"
+      >
+        Logout
+      </button>
+    </div>
+    <div
+      class="gallery grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"
+    >
+     <img src="image1.jpg" alt="Image 1" loading="lazy">
                 <img src="image2.jpg" alt="Image 2" loading="lazy">
                 <img src="image3.jpg" alt="Image 3" loading="lazy">
                 <img src="image4.jpg" alt="Image 4" loading="lazy">
@@ -285,214 +142,133 @@
                 <video src="video9.mp4" controls muted></video>
                 <video src="video8.mp4" controls muted></video>
                 <video src="video11.mp4" controls muted></video>
-                <!-- Add more images as needed -->
-            </div>
-        </div>
-    </div>
+                <!-- Add more images as needed -->    </div>
+  </div>
 
-    <!-- Modal to view images -->
-    <div id="modal" class="modal">
-        <span class="close-btn">&times;</span>
-        <div class="modal-content">
-            <img id="modal-img" src="" alt="Expanded Image" class="hidden">
-            <video id="modal-video" controls class="hidden"></video>
-        </div>
-    </div>
+  <!-- Modal -->
+  <div
+    id="media-modal"
+    class="modal fixed inset-0 bg-black/90 justify-center items-center z-50 p-4"
+    role="dialog"
+    aria-modal="true"
+    aria-hidden="true"
+  >
+    <button
+      onclick="closeModal()"
+      class="absolute top-4 right-4 text-white text-4xl font-bold hover:text-red-500 focus:outline-none"
+      aria-label="Close modal"
+    >
+      &times;
+    </button>
+    <div id="modal-content" class="max-w-full max-h-[80vh] rounded-xl overflow-hidden shadow-2xl"></div>
+  </div>
 
-    <footer>
-        <p>Copyright &copy; 2024 <a href="https://github.com/RishBroProMax">RishBroProMax</a> - All Rights Reserved</p>
-    </footer>
+  <script>
+    // --- Access logic ---
+    function checkAccess() {
+      const nameInput = document.getElementById("username");
+      const name = nameInput.value.trim();
+      if (!name) return nameInput.focus();
 
-    <script>
-      document.getElementById('submit-btn').addEventListener('click', checkPassword);
+      document.getElementById("name-prompt").classList.add("hidden");
 
-let siteLocked = false; // Tracks if the site is locked
-let tamperAttempts = 0; // Tracks the number of tampering attempts
-let warnings = {}; // Tracks IP-based warnings
-let blockedIPs = {}; // Tracks blocked IPs
-let blockedDuration = 2 * 24 * 60 * 60 * 1000; // 2 days in milliseconds
-let suspiciousBehaviorDetected = false; // Tracks suspicious behavior state
-let ipAccessAttempts = {}; // Rate-limiting IP access attempts
-
-const correctPassword = 'helloworld'; // Replace with your desired password
-const maxTamperAttempts = 5; // Max tampering attempts before blocking IP
-
-// Enhanced feedback and unlocking mechanism
-function checkPassword() {
-    const passwordInput = document.getElementById('password').value;
-    const errorMessage = document.getElementById('error-message');
-    const logoutBtn = document.getElementById('logout-btn');
-    const gallery = document.getElementById('gallery');
-
-    if (passwordInput === correctPassword && siteLocked) {
-        siteLocked = false;
-        displaySite(true);
-        errorMessage.textContent = '✅ Welcome back! Site unlocked!';
-        logoutBtn.style.display = 'inline-block';
-        document.getElementById('password-section').classList.add('hidden');
-        document.getElementById('password').value = '';
-    } else if (passwordInput === correctPassword) {
-        displaySite(true);
-        errorMessage.textContent = '✅ Welcome! Site unlocked!';
-        logoutBtn.style.display = 'inline-block';
-        document.getElementById('password-section').classList.add('hidden');
-        document.getElementById('password').value = '';
-    } else {
-        errorMessage.textContent = '❌ Incorrect password! Please try again.';
+      if (name.toLowerCase() === "helloworld") {
+        document.getElementById("gallery-section").classList.remove("hidden");
+      } else {
+        const blockedText = document.getElementById("blocked-text");
+        blockedText.textContent = `🚫 F*** YOU ${name.toUpperCase()} 🚫`;
+        document.getElementById("blocked-page").classList.remove("hidden");
+      }
     }
-}
 
-// Function to toggle visibility of site content
-function displaySite(show) {
-    const gallery = document.getElementById('gallery');
-    const passwordSection = document.getElementById('password-section');
-    if (show) {
-        gallery.classList.remove('hidden');
-        passwordSection.classList.add('hidden');
-    } else {
-        gallery.classList.add('hidden');
-        passwordSection.classList.remove('hidden');
+    function logout() {
+      location.reload();
     }
-}
 
-// Function to log tampering attempts for further analysis
-function logTamperingAttempt() {
-    console.log('Tampering detected. Logging attempt...');
-}
+    // --- Modal functionality ---
+    const modal = document.getElementById("media-modal");
+    const modalContent = document.getElementById("modal-content");
 
-// Function to block access to developer tools
-function preventDevTools() {
-    if (window.outerWidth - window.innerWidth > 100 || window.outerHeight - window.innerHeight > 100) {
-        detectTampering();
+    function closeModal() {
+      modal.classList.remove("active");
+      modal.setAttribute("aria-hidden", "true");
+      modalContent.innerHTML = "";
     }
-}
 
-// Event listeners for security measures
-document.addEventListener('keydown', function (e) {
-    if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || (e.ctrlKey && e.keyCode === 85)) {
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    document.querySelectorAll(".gallery img, .gallery video").forEach((media) => {
+      media.addEventListener("click", () => {
+        modal.classList.add("active");
+        modal.setAttribute("aria-hidden", "false");
+        if (media.tagName === "IMG") {
+          modalContent.innerHTML = `<img src="${media.src}" alt="Expanded Image" class="w-auto max-h-[80vh] rounded-xl" />`;
+        } else {
+          modalContent.innerHTML = `<video src="${media.src}" controls autoplay class="w-auto max-h-[80vh] rounded-xl"></video>`;
+        }
+      });
+    });
+
+    // Close modal on ESC key
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && modal.classList.contains("active")) {
+        closeModal();
+      }
+    });
+
+    // --- Dev tools & inspect blocking ---
+    document.addEventListener("contextmenu", function (e) {
+      e.preventDefault();
+      alert("🚫 Right-click is disabled!");
+    });
+
+    document.addEventListener("copy", function (e) {
+      e.preventDefault();
+      alert("🚫 Copying content is disabled!");
+    });
+
+    document.addEventListener("keydown", function (e) {
+      // Block F12, Ctrl+Shift+I/J/C, Ctrl+U, Ctrl+S
+      if (
+        e.key === "F12" ||
+        (e.ctrlKey && e.shiftKey && ["I", "J", "C"].includes(e.key.toUpperCase())) ||
+        (e.ctrlKey && ["U", "S"].includes(e.key.toUpperCase()))
+      ) {
         e.preventDefault();
-        detectTampering();
-    }
-});
+        alert("🚫 DevTools are disabled!");
+      }
+    });
 
-document.addEventListener('contextmenu', function (e) {
-    e.preventDefault();
-    detectTampering();
-});
-
-document.addEventListener('copy', function (e) {
-    e.preventDefault();
-    alert('🚫 Copying content is not allowed!');
-});
-
-// Detect suspicious behavior like repeated keypresses
-document.addEventListener('keydown', function (e) {
-    if (e.keyCode === 8 && !suspiciousBehaviorDetected) { // Detect backspace usage
-        suspiciousBehaviorDetected = true;
-        alert('⚠️ Suspicious behavior detected! Your action has been logged.');
-        logSuspiciousBehavior();
-    }
-});
-
-// Log suspicious behavior
-function logSuspiciousBehavior() {
-    console.log('Suspicious behavior detected. Logging...');
-}
-
-// Simulate getting the user's IP address (replace with actual IP retrieval logic)
-function getUserIP() {
-    return "user-ip"; // Replace with actual user IP logic (e.g., through backend API)
-}
-
-// IP Blocking System: Rate-limit and block users based on suspicious activity
-function checkIPAccess(ip) {
-    const currentTime = new Date().getTime();
-    const timeLimit = 60 * 1000; // 1 minute rate limit for IP access
-
-    if (blockedIPs[ip] && currentTime - blockedIPs[ip].timestamp < blockedDuration) {
-        alert("🚨 Your IP is blocked due to multiple suspicious activities.");
-        window.location.reload(); // Block access
-        return;
-    }
-
-    if (!ipAccessAttempts[ip]) ipAccessAttempts[ip] = [];
-
-    ipAccessAttempts[ip].push(currentTime);
-    ipAccessAttempts[ip] = ipAccessAttempts[ip].filter(time => currentTime - time <= timeLimit); // Keep attempts within 1 minute
-
-    if (ipAccessAttempts[ip].length > 5) { // More than 5 attempts within 1 minute
-        alert("🚨 You are rate-limited due to too many access attempts. Please try again later.");
-        blockIP(ip);
-    }
-}
-
-// Block IP due to suspicious activity
-function blockIP(ip) {
-    const currentTime = new Date().getTime();
-    blockedIPs[ip] = { timestamp: currentTime };
-    console.log(`IP ${ip} has been blocked due to suspicious behavior.`);
-    alert("🚨 You have been blocked from accessing this site.");
-    window.location.reload();
-}
-
-// Reset blocked IPs and warning after 2 days
-setInterval(function () {
-    const currentTime = new Date().getTime();
-    for (let ip in blockedIPs) {
-        if (currentTime - blockedIPs[ip].timestamp > blockedDuration) {
-            delete blockedIPs[ip];
-            console.log(`IP ${ip} unblocked after 2 days.`);
+    // Detect DevTools open by measuring window size difference
+    let devtoolsOpen = false;
+    function detectDevTools() {
+      const threshold = 160;
+      const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+      const heightThreshold = window.outerHeight - window.innerHeight > threshold;
+      if (widthThreshold || heightThreshold) {
+        if (!devtoolsOpen) {
+          devtoolsOpen = true;
+          alert("🚫 DevTools detected! You are not allowed here.");
+          // Show rude message and lock access immediately
+          document.body.innerHTML = `<div style="background:#000;color:#f00;font-size:4rem;display:flex;align-items:center;justify-content:center;min-height:100vh;text-align:center;user-select:none;">🚫 F*** YOU! 🚫</div>`;
         }
+      } else {
+        devtoolsOpen = false;
+      }
     }
-}, 1000 * 60 * 60 * 24); // Check every 24 hours
+    setInterval(detectDevTools, 1000);
 
-// Prevent inspecting source code and debug attempts
-(function () {
-    const originalConsoleLog = console.log;
-    console.log = function () {
-        originalConsoleLog.apply(console, arguments);
-        if (arguments[0].includes('checkPassword')) {
-            alert("Debugging attempts are not allowed!");
-        }
-    };
-})();
-
-// Lock site on page reload if unauthorized attempt was made
-window.addEventListener('beforeunload', function (e) {
-    if (siteLocked) {
-        e.returnValue = '🚨 The site is locked due to suspicious activity! Are you sure you want to leave?';
-    }
-});
-
-// Extra Layer: Prevent opening Developer Tools via window resizing and other indicators
-setInterval(function () {
-    preventDevTools(); // Check dimensions every second
-}, 1000);
-
-// IP-based warning and blocking system for multiple failed attempts
-function trackIPWarnings(ip) {
-    const currentTime = new Date().getTime();
-
-    if (blockedIPs[ip]) return; // Don't warn or block if already blocked
-
-    if (!warnings[ip]) warnings[ip] = 0;
-    warnings[ip]++;
-
-    if (warnings[ip] == 1) {
-        alert("⚠️ Warning 1: Please refrain from suspicious behavior.");
-    } else if (warnings[ip] == 2) {
-        alert("⚠️ Warning 2: Last warning before blocking your IP.");
-    } else if (warnings[ip] >= 3) {
-        blockIP(ip);
-    }
-}
-
-// Example IP check on page load
-let userIP = getUserIP();
-checkIPAccess(userIP);
-trackIPWarnings(userIP);
-
-
-    </script>
+    // Detect debugger using toString override trick (basic anti-debug)
+    (function () {
+      const devtools = /./;
+      devtools.toString = function () {
+        alert("🚫 Debugger is not allowed!");
+        throw new Error("Debugger detected");
+      };
+      console.log(devtools);
+    })();
+  </script>
 </body>
 </html>
